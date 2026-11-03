@@ -88,6 +88,38 @@ h1{text-align:center;font-size:3rem;line-height:.6;font-weight:900;background:li
 .mid{display:grid;justify-items:center;gap:3px;margin-top:-30px;font-size:.75rem;color:var(--muted)}
 .bnav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.play svg{width:26px;height:26px}
 .bnav{background:rgba(255,255,255,.07)}
+.bd{transform-box:fill-box;transform-origin:50% 100%;animation:breath 2.6s ease-in-out infinite}
+@keyframes breath{50%{transform:scaleY(1.025)}}
+.eye{transform-box:fill-box;transform-origin:center;animation:blink 4.2s infinite}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+.m2,.m3{display:none}
+.tok[class*=" e-"] .m1{display:none}
+.tok:is(.e-joy,.e-dance,.e-dizzy) .m2{display:inline}
+.tok:is(.e-sad,.e-cry,.e-cold,.e-mad) .m3{display:inline}
+.aL,.aR{transform-origin:20px 23px}
+.tok:not(.walk).e-joy svg{animation:jump .35s ease-out infinite alternate}
+.tok:not(.walk).e-dance svg{animation:sway .3s ease-in-out infinite alternate}
+.tok:not(.walk).e-spin svg{animation:spinY .6s linear infinite}
+.tok:not(.walk).e-dizzy svg{animation:wob .5s ease-in-out infinite alternate;transform-origin:50% 100%}
+.tok:not(.walk).e-sad svg,.tok:not(.walk).e-cry svg{animation:slump .6s forwards}
+.tok:not(.walk).e-cold svg{animation:shiv .09s infinite;color:#9fe8ff}
+.tok:not(.walk).e-mad svg{animation:shiv .07s infinite;color:#ff5a5a}
+.tok:not(.walk):is(.e-joy,.e-dance) .aL{animation:waveL .25s ease-in-out infinite alternate}
+.tok:not(.walk):is(.e-joy,.e-dance) .aR{animation:waveR .25s ease-in-out infinite alternate}
+.tok:not(.walk):is(.e-dizzy,.e-mad) .aL{transform:rotate(60deg)}
+.tok:not(.walk):is(.e-dizzy,.e-mad) .aR{transform:rotate(-60deg)}
+@keyframes jump{to{transform:translateY(-12px)}}
+@keyframes sway{from{transform:rotate(-9deg)}to{transform:rotate(9deg) translateY(-6px)}}
+@keyframes spinY{to{transform:rotateY(360deg)}}
+@keyframes wob{from{transform:rotate(-12deg)}to{transform:rotate(12deg)}}
+@keyframes slump{to{transform:translateY(3px) scaleY(.92)}}
+@keyframes shiv{25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
+@keyframes waveL{from{transform:rotate(110deg)}to{transform:rotate(150deg)}}
+@keyframes waveR{from{transform:rotate(-110deg)}to{transform:rotate(-150deg)}}
+.bub{position:absolute;left:50%;bottom:100%;font-size:20px;white-space:nowrap;opacity:0;pointer-events:none;transform:translateX(-50%)}
+.bub.on{animation:pop 1.8s ease-out forwards}
+@keyframes pop{0%{opacity:0;transform:translate(-50%,8px) scale(.4)}15%{opacity:1;transform:translate(-50%,0) scale(1.25)}80%{opacity:1;transform:translate(-50%,-8px) scale(1)}100%{opacity:0;transform:translate(-50%,-16px)}}
+.emos{display:flex;gap:6px;justify-content:center}.emos button{width:52px;height:40px;border-radius:14px;border:1px solid var(--gb);background:var(--glass);font-size:1.2rem;cursor:pointer}.emos button:active{transform:scale(.92)}
 @media(prefers-reduced-motion:reduce){#w,.tok{transition:none}}
 </style>
 </head>
@@ -111,6 +143,7 @@ h1{text-align:center;font-size:3rem;line-height:.6;font-weight:900;background:li
   <div class="mm"><i id="m0"></i><i id="m1"></i></div>
   <div class="ctrl glass"><div id="dice">?</div><button class="btn" id="go" disabled>🎲 Kubik tashla</button></div>
   <div class="tools"><button class="tb" id="tT" disabled>⚡ Turbo</button><button class="tb" id="tP" disabled>🎯 +2</button><button class="tb" id="tPa">⏸</button><button class="tb" id="tS">🔊</button></div>
+  <div class="emos" id="emos"><button data-e="dance">😂</button><button data-e="mad">😡</button><button data-e="joy">👍</button><button data-e="dizzy">😱</button></div>
   <div class="log" id="log">Rejimni tanlang</div>
   <div id="scene"><div class="fade"></div><div id="w"></div>
     <div id="over"><div id="ow" hidden><div id="ot"></div><button class="btn" id="ag">🔄 Qayta o‘ynash</button><button class="btn" id="mn">🏠 Menyu</button></div><div id="om"><div>Rejimni tanlang</div><div class="seg"><button class="tb on" data-m="bot">🤖 Bot bilan</button><button class="tb" data-m="duo">👥 2 kishilik</button></div><input class="in" id="n1" maxlength="14" value="Player" aria-label="1-o‘yinchi ismi"><input class="in" id="n2" maxlength="14" value="Bot" disabled aria-label="2-o‘yinchi ismi"><button class="btn" id="st">▶ Boshlash</button></div></div></div>
@@ -146,7 +179,7 @@ function vib(){try{navigator.vibrate&&navigator.vibrate(30)}catch(e){}}
   }
   COL.forEach(function(c,k){
     var t=document.createElement("div");t.className="tok";
-    t.innerHTML='<div class="sh"></div><div class="st" style="color:'+c+'"><svg viewBox="0 0 40 60" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"><circle cx="20" cy="10" r="7.5" fill="currentColor"/><line x1="20" y1="18" x2="20" y2="36"/><line x1="20" y1="23" x2="8" y2="32"/><line x1="20" y1="23" x2="32" y2="32"/><line class="lL" x1="20" y1="36" x2="12" y2="57"/><line class="lR" x1="20" y1="36" x2="28" y2="57"/></svg></div>';
+    t.innerHTML='<div class="sh"></div><div class="st" style="color:'+c+'"><svg viewBox="0 0 40 60" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"><g class="bd"><circle cx="20" cy="10" r="7.5" fill="currentColor"/><circle class="eye" cx="17.2" cy="9" r="1.1" fill="#0b0a22" stroke="none"/><circle class="eye" cx="22.8" cy="9" r="1.1" fill="#0b0a22" stroke="none"/><path class="m1" d="M16.5 12.2Q20 15 23.5 12.2" stroke="#0b0a22" stroke-width="1.3"/><ellipse class="m2" cx="20" cy="13" rx="2.2" ry="2.6" fill="#0b0a22" stroke="none"/><path class="m3" d="M16.5 14.4Q20 11.4 23.5 14.4" stroke="#0b0a22" stroke-width="1.3"/><line x1="20" y1="18" x2="20" y2="36"/><line class="aL" x1="20" y1="23" x2="8" y2="32"/><line class="aR" x1="20" y1="23" x2="32" y2="32"/><line class="lL" x1="20" y1="36" x2="12" y2="57"/><line class="lR" x1="20" y1="36" x2="28" y2="57"/></g></svg><div class="bub"></div></div>';
     W.appendChild(t);toks.push(t);$("m"+k).style.background=c;
   });
 })();
@@ -176,18 +209,18 @@ async function walk(k,n){
   toks[k].classList.remove("walk");
 }
 async function jump(k,i){toks[k].style.transitionDuration=".9s";S[k].pos=i;place(k);hud();beep(300,.3);await sleep(1000);toks[k].style.transitionDuration=""}
-async function bad(k,msg,fn){
+async function bad(k,msg,fn,e){
   var s=S[k];vib();
   if(s.sh){s.sh=false;say("🛡️ "+PL[k].n+"ning qalqoni himoya qildi!");await sleep(900)}
-  else{say(PL[k].n+": "+msg);await sleep(700);await fn()}
+  else{emo(k,e||"dizzy",e==="cold"?"🥶":"😵",2200);say(PL[k].n+": "+msg);await sleep(700);await fn()}
 }
-async function swap(k){var a=S[k].pos,b=S[1-k].pos;say("🔄 "+PL[k].n+" raqib bilan joy almashdi!");await sleep(500);await Promise.all([jump(k,b),jump(1-k,a)])}
+async function swap(k){var a=S[k].pos,b=S[1-k].pos;say("🔄 "+PL[k].n+" raqib bilan joy almashdi!");emo(k,"spin","🔄",1300);emo(1-k,"spin","🔄",1300);await sleep(500);await Promise.all([jump(k,b),jump(1-k,a)])}
 async function land(k){
   var p=S[k],t=MAP[p.pos],n=PL[k].n;
   if(t==="s")await swap(k);
-  else if(t==="u"){p.tu++;say("⚡ "+n+" turbo oldi!");beep(800,.2)}
-  else if(t==="q"){p.sh=true;say("🛡️ "+n+" qalqon oldi!");beep(700,.2)}
-  else if(t==="i")await bad(k,"🧊 muzga tushdi, keyingi navbati o‘tadi",function(){p.sk=true});
+  else if(t==="u"){p.tu++;say("⚡ "+n+" turbo oldi!");emo(k,"joy","⚡",1500);beep(800,.2)}
+  else if(t==="q"){p.sh=true;say("🛡️ "+n+" qalqon oldi!");emo(k,"joy","🛡️",1500);beep(700,.2)}
+  else if(t==="i")await bad(k,"🧊 muzga tushdi, keyingi navbati o‘tadi",function(){p.sk=true},"cold");
   else if(t==="k"){var b=rnd(5,8);await bad(k,"🕳️ qora tuynuk "+b+" katak ortga tortdi!",function(){return walk(k,-b)})}
   else if(t==="x"){
     var m=rnd(0,5);
@@ -195,7 +228,7 @@ async function land(k){
     else if(m===1)await bad(k,"🎁 sirli qutidan 4 katak ortga!",function(){return walk(k,-4)});
     else if(m===2){p.sh=true;say("🎁 Qalqon topdi!")}
     else if(m===3){p.tu++;p.bo++;say("🎁 Turbo va 🎯 oldi!")}
-    else if(m===4)await bad(k,"🎁 muzlab qoldi!",function(){p.sk=true});
+    else if(m===4)await bad(k,"🎁 muzlab qoldi!",function(){p.sk=true},"cold");
     else await swap(k);
   }
   hud();await sleep(500);
@@ -218,7 +251,7 @@ $("tPa").onclick=function(){paused=!paused;this.textContent=paused?"▶":"⏸"};
 $("tS").onclick=function(){snd=!snd;this.textContent=snd?"🔊":"🔇"};
 function confetti(){for(var i=0;i<50;i++){var c=document.createElement("b");c.className="cf";c.style.cssText="left:"+rnd(5,95)+"%;background:hsl("+rnd(0,360)+",90%,60%);--dx:"+rnd(-60,60)+"px;animation-delay:"+(Math.random()*.5)+"s";sc.appendChild(c);setTimeout(c.remove.bind(c),2800)}}
 function win(k){
-  over=true;hud();confetti();[600,760,920,1200].forEach(function(f,i){setTimeout(function(){beep(f,.2)},i*160)});
+  over=true;hud();confetti();emo(k,"dance","🏆",0);emo(1-k,"cry","😭",0);[600,760,920,1200].forEach(function(f,i){setTimeout(function(){beep(f,.2)},i*160)});
   $("ot").textContent="🏆 "+PL[k].n+(PL[k].bot?" yutdi!":" yutdi! 🎉");
   showOver("w");ST.g++;if(k===0)ST.w++;saveST();stats();
 }
@@ -228,7 +261,7 @@ async function play(){
     if(p.sk){p.sk=false;say("🧊 "+PL[cur].n+" muzlab qoldi, navbati o‘tdi");await sleep(1300);cur=1-cur;continue}
     if(PL[cur].bot){say(PL[cur].n+" kubik tashlayapti…");await sleep(1000);arm.t=p.tu>0&&Math.random()<.3;arm.p=p.bo>0&&Math.random()<.25}
     else{say(PL[cur].n+", sizning navbatingiz!");setBtns(true);await new Promise(function(r){resume=r})}
-    var x=await roll(p);say(PL[cur].n+": "+x[0]+" tushdi"+x[1]);await sleep(450);
+    var x=await roll(p);say(PL[cur].n+": "+x[0]+" tushdi"+x[1]);if(x[0]>=8)emo(cur,"joy","🥳",2000);else if(x[0]<=2)emo(cur,"sad","😢",2000);await sleep(450);
     await walk(cur,x[0]);
     if(p.pos>=LAST){win(cur);return}
     await land(cur);
@@ -242,7 +275,7 @@ function start(){
   S=[0,1].map(function(){return{pos:0,sh:false,sk:false,tu:1,bo:2}});
   cur=0;over=false;resume=null;arm.t=arm.p=false;setBtns(false);dice.textContent="?";
   $("over").classList.add("off");
-  [0,1].forEach(place);hud();play().catch(function(){});
+  toks.forEach(function(t,k){emo(k,"")});[0,1].forEach(place);hud();play().catch(function(){});
 }
 function showOver(w){$("over").classList.remove("off");$("ow").hidden=w!=="w";$("om").hidden=w==="w"}
 function openMode(){gen++;over=true;resume=null;paused=false;$("tPa").textContent="⏸";setBtns(false);cam(0);showOver("m")}
@@ -252,6 +285,9 @@ $("g1").onclick=$("np").onclick=function(){show("game");openMode()};
 $("bk").onclick=$("mn").onclick=function(){gen++;over=true;resume=null;show("menu")};
 $("rs").onclick=$("ag").onclick=openMode;
 function who(n){$("hn").textContent=n;$("pn").textContent=n}
+var EM=["joy","sad","dizzy","cold","spin","dance","cry","mad"];
+function emo(k,e,ic,ms){var t=toks[k];EM.forEach(function(x){t.classList.remove("e-"+x)});clearTimeout(t._t);if(e){t.classList.add("e-"+e);if(ms)t._t=setTimeout(function(){t.classList.remove("e-"+e)},ms)}var b=t.querySelector(".bub");if(ic){b.textContent=ic;b.classList.remove("on");void b.offsetWidth;b.classList.add("on")}}
+document.querySelectorAll("#emos button").forEach(function(b){b.onclick=function(){if(over||!S)return;emo(mode==="bot"?0:cur,b.dataset.e,b.textContent,2200)}});
 function tab(p){$("mhome").hidden=p!=="h";$("mprof").hidden=p!=="p";$("nh").classList.toggle("on",p==="h");$("npr").classList.toggle("on",p==="p")}
 $("nh").onclick=function(){tab("h")};$("npr").onclick=function(){tab("p")};
 $("st").onclick=function(){start();who(PL[0].n);try{localStorage.setItem("np_n",PL[0].n)}catch(e){}};
