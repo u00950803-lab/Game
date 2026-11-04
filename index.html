@@ -122,20 +122,38 @@ h1{text-align:center;font-size:3rem;line-height:.6;font-weight:900;background:li
 .emos{display:flex;gap:6px;justify-content:center}.emos button{width:52px;height:40px;border-radius:14px;border:1px solid var(--gb);background:var(--glass);font-size:1.2rem;cursor:pointer}.emos button:active{transform:scale(.92)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--gl:rgba(170,30,220,.5);--gr:rgba(20,50,255,.55);--bg1:#08070f;--bg2:#0a0a1c}}
 :root[data-theme="dark"]{--gl:rgba(170,30,220,.5);--gr:rgba(20,50,255,.55);--bg1:#08070f;--bg2:#0a0a1c}
-#splash{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:radial-gradient(70% 55% at 0% 45%,rgba(170,30,220,.55),transparent),radial-gradient(80% 50% at 100% 100%,rgba(20,50,255,.65),transparent),#07060f;transition:opacity .6s,visibility .6s}
+#splash{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:#07060f;transition:opacity .6s,visibility .6s}
+#splash::before{content:"";position:absolute;inset:0;background:radial-gradient(70% 55% at 0% 45%,rgba(170,30,220,.55),transparent),radial-gradient(80% 50% at 100% 100%,rgba(20,50,255,.65),transparent);opacity:0;animation:glowIn 1.6s ease-out .4s forwards}
+@keyframes glowIn{to{opacity:1}}
+.hp{fill:#1a1626;stroke:#2a2438;stroke-width:12;stroke-linejoin:round;animation:hpIn 1.6s ease-out .5s forwards}
+.ht{fill:#2a2438;stroke:#34304a;stroke-width:2;animation:htIn 1.6s ease-out .5s forwards}
+@keyframes hpIn{to{fill:rgba(255,255,255,.07);stroke:rgba(255,255,255,.14)}}
+@keyframes htIn{to{fill:rgba(255,255,255,.1);stroke:rgba(255,255,255,.2)}}
+@keyframes hexIn{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}
 #splash.off{opacity:0;visibility:hidden}
-.hexw{filter:drop-shadow(0 0 18px rgba(160,90,255,.25));animation:pulse 1.6s ease-in-out infinite alternate}
+.hexw{filter:drop-shadow(0 0 18px rgba(160,90,255,.25));animation:hexIn .7s ease-out,pulse 1.6s ease-in-out .7s infinite alternate}
 .hex{width:150px;height:172px;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:linear-gradient(160deg,rgba(255,255,255,.2),rgba(255,255,255,.04));display:grid;place-items:center}
 .hex span{font-size:7.5rem;font-weight:900;line-height:.5;color:rgba(255,255,255,.55);padding-bottom:.18em}
 .sbar{position:absolute;bottom:14%;width:120px;height:4px;border-radius:4px;background:rgba(255,255,255,.15);overflow:hidden}
 .sbar i{display:block;height:100%;width:40%;border-radius:4px;background:linear-gradient(90deg,#a63cff,#2b4bff);animation:ld 1.1s ease-in-out infinite}
 @keyframes ld{from{margin-left:-40%}to{margin-left:100%}}
 @keyframes pulse{to{transform:scale(1.06);opacity:.85}}
+#game{max-width:480px}#game #scene{order:-2;height:min(60vh,520px);min-height:400px}#game .log{order:-1}
+.sb{position:absolute;top:10px;z-index:10;width:44px;color:#fff}.sb.l{left:10px}.sb.r{right:10px}
+#cubeBox{position:absolute;top:14px;left:50%;margin-left:-32px;width:64px;height:64px;perspective:320px;z-index:5;animation:bob 2.4s ease-in-out infinite}
+#cubeBox.ready{cursor:pointer}
+@keyframes bob{50%{transform:translateY(-5px)}}
+#cube{width:64px;height:64px;position:relative;transform-style:preserve-3d;transform:rotateX(-22deg) rotateY(-28deg)}
+#cube.rolling{animation:tumble .6s linear infinite}
+@keyframes tumble{to{transform:rotateX(720deg) rotateY(540deg) rotateZ(180deg)}}
+#cube .f{position:absolute;inset:0;width:64px;height:64px;display:grid;place-items:center;font-size:1.7rem;font-weight:800;color:#fff;border-radius:12px;border:1.5px solid rgba(255,255,255,.55);background:linear-gradient(135deg,rgba(124,92,255,.75),rgba(34,211,238,.6));box-shadow:inset 0 0 14px rgba(255,255,255,.3)}
+.f0{transform:translateZ(32px)}.f1{transform:rotateY(180deg) translateZ(32px)}.f2{transform:rotateY(90deg) translateZ(32px)}.f3{transform:rotateY(-90deg) translateZ(32px)}.f4{transform:rotateX(90deg) translateZ(32px)}.f5{transform:rotateX(-90deg) translateZ(32px)}
+#cubeBox.ready #cube .f{box-shadow:inset 0 0 14px rgba(255,255,255,.3),0 0 22px #ffd54a;border-color:#ffd54a}
 @media(prefers-reduced-motion:reduce){#w,.tok{transition:none}}
 </style>
 </head>
 <body>
-<div id="splash"><div class="hexw"><svg width="170" height="190" viewBox="0 0 170 190"><polygon points="85,8 160,50 160,140 85,182 10,140 10,50" fill="rgba(255,255,255,.05)" stroke="rgba(255,255,255,.22)" stroke-width="5" stroke-linejoin="round"/><text x="85" y="134" text-anchor="middle" font-family="Inter,Segoe UI,system-ui,sans-serif" font-size="112" font-weight="900" fill="rgba(255,255,255,.16)" stroke="rgba(255,255,255,.28)" stroke-width="2">G</text></svg></div><div class="sbar"><i></i></div></div>
+<div id="splash"><div class="hexw"><svg width="170" height="190" viewBox="0 0 170 190"><path class="hp" d="M67.6 17.8Q85 8 102.4 17.8L142.6 40.2Q160 50 160 70L160 120Q160 140 142.6 149.8L102.4 172.2Q85 182 67.6 172.2L27.4 149.8Q10 140 10 120L10 70Q10 50 27.4 40.2Z"/><text class="ht" x="85" y="134" text-anchor="middle" font-family="Inter,Segoe UI,system-ui,sans-serif" font-size="112" font-weight="900">G</text></svg></div><div class="sbar"><i></i></div></div>
 <div class="app" id="menu">
   <div id="mhome">
     <div class="mhead"><div><small>XAYRLI KUN</small><h2>Salom, <span id="hn">Player</span></h2></div><div class="avatar">🕹️</div></div>
@@ -150,19 +168,19 @@ h1{text-align:center;font-size:3rem;line-height:.6;font-weight:900;background:li
   <nav class="bnav glass"><button class="nv on" id="nh"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Bosh</button><div class="mid"><button class="play" id="np" aria-label="Game"><svg viewBox="0 0 24 24"><path d="M6 8h12a4 4 0 014 4v2a3 3 0 01-5.2 2L15 14H9l-1.8 2A3 3 0 012 14v-2a4 4 0 014-4z"/><path d="M8 10v3M6.5 11.5h3"/><circle cx="16" cy="11" r=".6"/></svg></button><span>Game</span></div><button class="nv" id="npr"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Profil</button></nav>
 </div>
 <div class="app" id="game" hidden>
-  <div class="top"><button class="tb" id="bk">←</button><h1>.</h1><button class="tb" id="rs">🔄</button></div>
+  
   <div class="players" id="pls"></div>
   <div class="mm"><i id="m0"></i><i id="m1"></i></div>
-  <div class="ctrl glass"><div id="dice">?</div><button class="btn" id="go" disabled>🎲 Kubik tashla</button></div>
+  <button class="btn" id="go" disabled hidden>🎲</button>
   <div class="tools"><button class="tb" id="tT" disabled>⚡ Turbo</button><button class="tb" id="tP" disabled>🎯 +2</button><button class="tb" id="tPa">⏸</button><button class="tb" id="tS">🔊</button></div>
   <div class="emos" id="emos"><button data-e="dance">😂</button><button data-e="mad">😡</button><button data-e="joy">👍</button><button data-e="dizzy">😱</button></div>
   <div class="log" id="log">Rejimni tanlang</div>
-  <div id="scene"><div class="fade"></div><div id="w"></div>
+  <div id="scene"><div class="fade"></div><div id="w"></div><button class="tb sb l" id="bk">←</button><button class="tb sb r" id="rs">🔄</button><div id="cubeBox"><div id="cube"><div class="f f0" id="dice">?</div><div class="f f1">?</div><div class="f f2">?</div><div class="f f3">?</div><div class="f f4">?</div><div class="f f5">?</div></div></div>
     <div id="over"><div id="ow" hidden><div id="ot"></div><button class="btn" id="ag">🔄 Qayta o‘ynash</button><button class="btn" id="mn">🏠 Menyu</button></div><div id="om"><div>Rejimni tanlang</div><div class="seg"><button class="tb on" data-m="bot">🤖 Bot bilan</button><button class="tb" data-m="duo">👥 2 kishilik</button></div><input class="in" id="n1" maxlength="14" value="Player" aria-label="1-o‘yinchi ismi"><input class="in" id="n2" maxlength="14" value="Bot" disabled aria-label="2-o‘yinchi ismi"><button class="btn" id="st">▶ Boshlash</button></div></div></div>
   
 </div>
 <script>
-var LAST=99,MAP=[],seed=7;
+var LAST=139,MAP=[],seed=7;
 function R(){seed=(seed*9301+49297)%233280;return seed/233280}
 for(var i=0;i<=LAST;i++){var t="n";if(i===0)t="S";else if(i===LAST)t="F";else if(i>2&&i<LAST-2){var r=R();t=r<.05?"s":r<.10?"x":r<.15?"i":r<.20?"k":r<.25?"u":r<.30?"q":"n"}MAP.push(t)}
 
@@ -175,7 +193,7 @@ function stats(){var pc=ST.g?Math.round(ST.w/ST.g*100):0;$("rp").textContent=pc+
 var PL,S,cur,over=true,resume=null,paused=false,snd=true,arm={t:false,p:false},toks=[],AC,gen=0,mode="bot";
 var $=function(id){return document.getElementById(id)};
 var W=$("w"),sc=$("scene"),dice=$("dice"),go=$("go"),tT=$("tT"),tP=$("tP");
-function zone(i){return i<30?0:i<60?1:i<80?2:3}
+function zone(i){return i<40?0:i<80?1:i<110?2:3}
 function P(i){var row=Math.floor(i/10),c=i%10;if(row%2)c=9-c;return[(c-4.5)*72,-row*110]}
 function rnd(a,b){return a+Math.floor(Math.random()*(b-a+1))}
 function say(t){$("log").textContent=t}
@@ -251,11 +269,11 @@ async function roll(p){
   var r=Math.max(a,b);
   if(arm.p&&p.bo>0){p.bo--;r+=2;note+=" 🎯+2"}
   arm.t=arm.p=false;
-  dice.classList.add("roll");
+  $("cube").classList.add("rolling");
   for(var i=0;i<9;i++){dice.textContent=rnd(1,10);beep(300+i*40,.04);await sleep(70)}
-  dice.classList.remove("roll");dice.textContent=r;return[r,note];
+  $("cube").classList.remove("rolling");dice.textContent=r;document.querySelectorAll("#cube .f:not(#dice)").forEach(function(f){f.textContent=rnd(1,10)});return[r,note];
 }
-function setBtns(e){go.disabled=!e;tT.disabled=tP.disabled=!e}
+function setBtns(e){go.disabled=!e;tT.disabled=tP.disabled=!e;$("cubeBox").classList.toggle("ready",e)}
 go.onclick=function(){if(resume){var f=resume;resume=null;setBtns(false);f()}};
 tT.onclick=function(){if(S[cur].tu>0){arm.t=!arm.t;hud()}};
 tP.onclick=function(){if(S[cur].bo>0){arm.p=!arm.p;hud()}};
@@ -272,7 +290,7 @@ async function play(){
     var p=S[cur];hud();cam(p.pos);
     if(p.sk){p.sk=false;say("🧊 "+PL[cur].n+" muzlab qoldi, navbati o‘tdi");await sleep(1300);cur=1-cur;continue}
     if(PL[cur].bot){say(PL[cur].n+" kubik tashlayapti…");await sleep(1000);arm.t=p.tu>0&&Math.random()<.3;arm.p=p.bo>0&&Math.random()<.25}
-    else{say(PL[cur].n+", sizning navbatingiz!");setBtns(true);await new Promise(function(r){resume=r})}
+    else{say(PL[cur].n+", kubikni bosing! 🎲");setBtns(true);await new Promise(function(r){resume=r})}
     var x=await roll(p);say(PL[cur].n+": "+x[0]+" tushdi"+x[1]);if(x[0]>=8)emo(cur,"joy","🥳",2000);else if(x[0]<=2)emo(cur,"sad","😢",2000);await sleep(450);
     await walk(cur,x[0]);
     if(p.pos>=LAST){win(cur);return}
@@ -294,6 +312,7 @@ function openMode(){gen++;over=true;resume=null;paused=false;$("tPa").textConten
 function show(id){$("menu").hidden=id!=="menu";$("game").hidden=id!=="game"}
 document.querySelectorAll(".seg .tb").forEach(function(b){b.onclick=function(){mode=b.dataset.m;document.querySelectorAll(".seg .tb").forEach(function(x){x.classList.toggle("on",x===b)});var n=$("n2");n.disabled=mode==="bot";n.value=mode==="bot"?"Bot":"Player 2"}});
 $("g1").onclick=$("np").onclick=function(){show("game");openMode()};
+$("cubeBox").onclick=function(){if(resume)go.onclick()};
 $("bk").onclick=$("mn").onclick=function(){gen++;over=true;resume=null;show("menu")};
 $("rs").onclick=$("ag").onclick=openMode;
 function who(n){$("hn").textContent=n;$("pn").textContent=n}
@@ -304,7 +323,7 @@ function tab(p){$("mhome").hidden=p!=="h";$("mprof").hidden=p!=="p";$("nh").clas
 $("nh").onclick=function(){tab("h")};$("npr").onclick=function(){tab("p")};
 $("st").onclick=function(){start();who(PL[0].n);try{localStorage.setItem("np_n",PL[0].n)}catch(e){}};
 stats();try{var sn=localStorage.getItem("np_n");if(sn){$("n1").value=sn;who(sn)}}catch(e){}
-setTimeout(function(){var s=$("splash");s.classList.add("off");setTimeout(function(){s.remove()},700)},1800);
+setTimeout(function(){var s=$("splash");s.classList.add("off");setTimeout(function(){s.remove()},700)},2800);
 </script>
 </body>
 </html>
