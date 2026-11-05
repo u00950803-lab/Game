@@ -149,6 +149,20 @@ h1{text-align:center;font-size:3rem;line-height:.6;font-weight:900;background:li
 #cube .f{position:absolute;inset:0;width:64px;height:64px;display:grid;place-items:center;font-size:1.7rem;font-weight:800;color:#fff;border-radius:12px;border:1.5px solid rgba(255,255,255,.55);background:linear-gradient(135deg,rgba(124,92,255,.75),rgba(34,211,238,.6));box-shadow:inset 0 0 14px rgba(255,255,255,.3)}
 .f0{transform:translateZ(32px)}.f1{transform:rotateY(180deg) translateZ(32px)}.f2{transform:rotateY(90deg) translateZ(32px)}.f3{transform:rotateY(-90deg) translateZ(32px)}.f4{transform:rotateX(90deg) translateZ(32px)}.f5{transform:rotateX(-90deg) translateZ(32px)}
 #cubeBox.ready #cube .f{box-shadow:inset 0 0 14px rgba(255,255,255,.3),0 0 22px #ffd54a;border-color:#ffd54a}
+#xo{max-width:420px}.xtop{display:flex;align-items:center;justify-content:space-between;gap:8px}.xtop b{font-size:1.1rem}.xtop .tb{width:46px}
+.xwrap{position:relative;padding:16px;overflow:hidden}
+#xb{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;aspect-ratio:1}
+.xc{border-radius:20px;border:1px solid var(--gb);background:var(--glass);cursor:pointer;display:grid;place-items:center;transition:transform .2s,background .2s;padding:0}
+.xc:not(:disabled):hover{transform:scale(1.04);background:var(--gb)}
+.xc svg{width:62%;height:62%;fill:none;stroke-width:9;stroke-linecap:round;overflow:visible}
+.xc.x svg{stroke:#22d3ee;filter:drop-shadow(0 0 8px #22d3ee)}.xc.o svg{stroke:#ff6bd6;filter:drop-shadow(0 0 8px #ff6bd6)}
+.xc svg *{stroke-dasharray:100;stroke-dashoffset:100;animation:draw .35s ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.xc.win{border-color:#ffd54a;box-shadow:0 0 22px #ffd54a;background:rgba(255,213,74,.2)}
+#xover{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;font-size:1.3rem;font-weight:800;color:#fff;background:rgba(10,8,35,.82);padding:20px}
+#xover.off{display:none}#xmode,#xend{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%}#xover .btn{flex:none;width:80%}#xover .tb{color:#fff}
+.xseg{display:flex;gap:8px;width:80%}.xseg .tb{flex:1}
+.feat2{background:linear-gradient(135deg,#ff6bd6,#a63cff 60%,#4a2bd6);box-shadow:0 10px 30px rgba(200,70,220,.4)}
 @media(prefers-reduced-motion:reduce){#w,.tok{transition:none}}
 </style>
 </head>
@@ -159,6 +173,7 @@ h1{text-align:center;font-size:3rem;line-height:.6;font-weight:900;background:li
     <div class="mhead"><div><small>XAYRLI KUN</small><h2>Salom, <span id="hn">Player</span></h2></div><div class="avatar">🕹️</div></div>
     <div class="goal glass"><div class="ring" id="ring"><b id="rp">0%</b></div><div><b>O‘yin natijalari</b><small id="gs">Hali o‘ynalmagan</small><div class="chips"><span id="c1">🎮 0</span><span id="c2">🏆 0</span></div></div></div>
     <button class="feat" id="g1"><span class="ge">🎲</span><b>Kosmik yo‘l</b><small>Kubik tashla, qalqon va turbo bilan birinchi bo‘lib yetib bor</small></button>
+    <button class="feat feat2" id="g2"><span class="ge">❌⭕</span><b>X-O</b><small>3 ta qatorni birinchi bo‘lib to‘ldir. Bot yoki do‘st bilan</small></button>
   </div>
   <div id="mprof" hidden>
     <div class="mhead"><h2>Profil</h2></div>
@@ -166,6 +181,16 @@ h1{text-align:center;font-size:3rem;line-height:.6;font-weight:900;background:li
     <div class="rows glass"><div><span>Jami o‘yinlar</span><b id="p1">0</b></div><div><span>G‘alabalar</span><b id="p2">0</b></div><div><span>G‘alaba foizi</span><b id="p3">0%</b></div></div>
   </div>
   <nav class="bnav glass"><button class="nv on" id="nh"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Bosh</button><div class="mid"><button class="play" id="np" aria-label="Game"><svg viewBox="0 0 24 24"><path d="M6 8h12a4 4 0 014 4v2a3 3 0 01-5.2 2L15 14H9l-1.8 2A3 3 0 012 14v-2a4 4 0 014-4z"/><path d="M8 10v3M6.5 11.5h3"/><circle cx="16" cy="11" r=".6"/></svg></button><span>Game</span></div><button class="nv" id="npr"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Profil</button></nav>
+</div>
+<div class="app" id="xo" hidden>
+  <div class="xtop"><button class="tb" id="xbk">←</button><b>❌ X-O ⭕</b><button class="tb" id="xrs">🔄</button></div>
+  <div class="players" id="xpl"></div>
+  <div class="log" id="xlog">Rejimni tanlang</div>
+  <div class="xwrap glass"><div id="xb"></div>
+    <div id="xover"><div id="xot">Rejimni tanlang</div>
+      <div id="xmode"><div class="xseg"><button class="tb on" data-m="bot">🤖 Bot bilan</button><button class="tb" data-m="duo">👥 2 kishilik</button></div><input class="in" id="xn1" maxlength="14" value="Player" aria-label="1-o‘yinchi ismi"><input class="in" id="xn2" maxlength="14" value="Bot" disabled aria-label="2-o‘yinchi ismi"><button class="btn" id="xst">▶ Boshlash</button></div>
+      <div id="xend" hidden><button class="btn" id="xag">🔄 Qayta o‘ynash</button><button class="btn" id="xmn">🏠 Menyu</button></div>
+    </div></div>
 </div>
 <div class="app" id="game" hidden>
   
@@ -309,10 +334,49 @@ function start(){
 }
 function showOver(w){$("over").classList.remove("off");$("ow").hidden=w!=="w";$("om").hidden=w==="w"}
 function openMode(){gen++;over=true;resume=null;paused=false;$("tPa").textContent="⏸";setBtns(false);cam(0);showOver("m")}
-function show(id){$("menu").hidden=id!=="menu";$("game").hidden=id!=="game"}
+function show(id){$("menu").hidden=id!=="menu";$("game").hidden=id!=="game";$("xo").hidden=id!=="xo"}
 document.querySelectorAll(".seg .tb").forEach(function(b){b.onclick=function(){mode=b.dataset.m;document.querySelectorAll(".seg .tb").forEach(function(x){x.classList.toggle("on",x===b)});var n=$("n2");n.disabled=mode==="bot";n.value=mode==="bot"?"Bot":"Player 2"}});
 $("g1").onclick=$("np").onclick=function(){show("game");openMode()};
 $("cubeBox").onclick=function(){if(resume)go.onclick()};
+var XM="bot",XB=[],XT=0,XP=[],xdone=true,xgen=0,XW=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+function xsay(t){$("xlog").textContent=t}
+function xhud(){var b=$("xpl");b.innerHTML="";XP.forEach(function(p,k){var c=document.createElement("div");c.className="pl glass"+(k===XT&&!xdone?" act":"");c.style.setProperty("--c",p.c);c.innerHTML='<b><span class="dot" style="background:'+p.c+'"></span>'+p.n+(p.bot?" 🤖":"")+'</b><span>'+p.m+'</span>';b.appendChild(c)})}
+function xshow(msg,end){$("xot").textContent=msg;$("xmode").hidden=end;$("xend").hidden=!end;$("xover").classList.remove("off")}
+function xopen(){xgen++;xdone=true;xshow("Rejimni tanlang",false)}
+function xstart(){
+  xgen++;var b=XM==="bot";
+  XP=[{n:$("xn1").value.trim()||"Player",c:"#22d3ee",m:"X"},{n:b?"Bot":($("xn2").value.trim()||"Player 2"),c:"#ff6bd6",m:"O",bot:b}];
+  XB=[0,0,0,0,0,0,0,0,0].map(function(){return""});XT=0;xdone=false;
+  var bd=$("xb");bd.innerHTML="";
+  for(var i=0;i<9;i++){var c=document.createElement("button");c.className="xc";c.dataset.i=i;c.setAttribute("aria-label","Katak "+(i+1));c.onclick=function(){xplay(+this.dataset.i)};bd.appendChild(c)}
+  $("xover").classList.add("off");xhud();xsay(XP[0].n+" (X), sizning navbatingiz!");
+}
+function xplay(i){if(xdone||XB[i]||XP[XT].bot)return;xmove(i)}
+function xmove(i){
+  var p=XP[XT],cells=$("xb").children,g=xgen;
+  XB[i]=p.m;cells[i].className="xc "+p.m.toLowerCase();cells[i].disabled=true;
+  cells[i].innerHTML=p.m==="X"?'<svg viewBox="0 0 100 100"><line x1="20" y1="20" x2="80" y2="80" pathLength="100"/><line x1="80" y1="20" x2="20" y2="80" pathLength="100"/></svg>':'<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="30" pathLength="100"/></svg>';
+  beep(XT?420:560,.08);vib();
+  var w=XW.filter(function(l){return l.every(function(k){return XB[k]===p.m})})[0];
+  if(w){xdone=true;w.forEach(function(k){cells[k].classList.add("win")});xhud();xsay("🏆 "+p.n+" yutdi!");beep(900,.25);setTimeout(function(){if(g===xgen)xshow("🏆 "+p.n+" yutdi!",true)},1100);return}
+  if(XB.every(Boolean)){xdone=true;xhud();xsay("🤝 Durang!");setTimeout(function(){if(g===xgen)xshow("🤝 Durang!",true)},900);return}
+  XT=1-XT;xhud();xsay(XP[XT].n+" ("+XP[XT].m+"), navbat sizda!");
+  if(XP[XT].bot)setTimeout(function(){if(g===xgen&&!xdone)xmove(xbot())},700);
+}
+function xbot(){
+  var e=[],r=Math.random(),p=-1;XB.forEach(function(v,i){if(!v)e.push(i)});
+  function find(s){for(var l=0;l<8;l++){var L=XW[l],c=L.filter(function(k){return XB[k]===s}).length,em=L.filter(function(k){return !XB[k]});if(c===2&&em.length===1)return em[0]}return -1}
+  if(r<.8){p=find("O");if(p<0)p=find("X")}
+  if(p<0&&!XB[4]&&Math.random()<.85)p=4;
+  if(p<0){var cs=[0,2,6,8].filter(function(k){return !XB[k]});if(cs.length&&Math.random()<.7)p=cs[rnd(0,cs.length-1)]}
+  if(p<0)p=e[rnd(0,e.length-1)];
+  return p;
+}
+document.querySelectorAll(".xseg .tb").forEach(function(b){b.onclick=function(){XM=b.dataset.m;document.querySelectorAll(".xseg .tb").forEach(function(x){x.classList.toggle("on",x===b)});var n=$("xn2");n.disabled=XM==="bot";n.value=XM==="bot"?"Bot":"Player 2"}});
+$("g2").onclick=function(){$("xn1").value=$("n1").value||"Player";show("xo");xopen()};
+$("xbk").onclick=$("xmn").onclick=function(){xgen++;xdone=true;show("menu")};
+$("xrs").onclick=$("xag").onclick=xopen;
+$("xst").onclick=xstart;
 $("bk").onclick=$("mn").onclick=function(){gen++;over=true;resume=null;show("menu")};
 $("rs").onclick=$("ag").onclick=openMode;
 function who(n){$("hn").textContent=n;$("pn").textContent=n}
