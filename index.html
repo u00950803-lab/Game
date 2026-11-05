@@ -163,6 +163,11 @@ h1{text-align:center;font-size:3rem;line-height:.6;font-weight:900;background:li
 #xover.off{display:none}#xmode,#xend{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%}#xover .btn{flex:none;width:80%}#xover .tb{color:#fff}
 .xseg{display:flex;gap:8px;width:80%}.xseg .tb{flex:1}
 .feat2{background:linear-gradient(135deg,#ff6bd6,#a63cff 60%,#4a2bd6);box-shadow:0 10px 30px rgba(200,70,220,.4)}
+.feat3{background:linear-gradient(135deg,#22d3ee,#2b7bff 60%,#3a2bd6);box-shadow:0 10px 30px rgba(40,140,255,.4)}
+#bb{max-width:420px}.bbh{display:flex;justify-content:space-around;padding:10px;font-size:.85rem}.bbh b{color:#ffd54a}
+#bbc{width:100%;display:block;touch-action:none;border-radius:14px;background:#0b0a22}
+#bbover{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;font-size:1.2rem;font-weight:800;color:#fff;background:rgba(10,8,35,.84);padding:20px;white-space:pre-line}#bbover.off{display:none}#bbover .btn{flex:none;width:80%}
+.bbt{display:flex;gap:6px}.bbt .tb{width:46px}
 @media(prefers-reduced-motion:reduce){#w,.tok{transition:none}}
 </style>
 </head>
@@ -174,6 +179,7 @@ h1{text-align:center;font-size:3rem;line-height:.6;font-weight:900;background:li
     <div class="goal glass"><div class="ring" id="ring"><b id="rp">0%</b></div><div><b>O‘yin natijalari</b><small id="gs">Hali o‘ynalmagan</small><div class="chips"><span id="c1">🎮 0</span><span id="c2">🏆 0</span></div></div></div>
     <button class="feat" id="g1"><span class="ge">🎲</span><b>Kosmik yo‘l</b><small>Kubik tashla, qalqon va turbo bilan birinchi bo‘lib yetib bor</small></button>
     <button class="feat feat2" id="g2"><span class="ge">❌⭕</span><b>X-O</b><small>3 ta qatorni birinchi bo‘lib to‘ldir. Bot yoki do‘st bilan</small></button>
+    <button class="feat feat3" id="g3"><span class="ge">🧱</span><b>Neon bloklar</b><small>Raqamli bloklarni sindir, to‘plarni ko‘paytir. Offlayn, bir kishilik</small></button>
   </div>
   <div id="mprof" hidden>
     <div class="mhead"><h2>Profil</h2></div>
@@ -181,6 +187,12 @@ h1{text-align:center;font-size:3rem;line-height:.6;font-weight:900;background:li
     <div class="rows glass"><div><span>Jami o‘yinlar</span><b id="p1">0</b></div><div><span>G‘alabalar</span><b id="p2">0</b></div><div><span>G‘alaba foizi</span><b id="p3">0%</b></div></div>
   </div>
   <nav class="bnav glass"><button class="nv on" id="nh"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Bosh</button><div class="mid"><button class="play" id="np" aria-label="Game"><svg viewBox="0 0 24 24"><path d="M6 8h12a4 4 0 014 4v2a3 3 0 01-5.2 2L15 14H9l-1.8 2A3 3 0 012 14v-2a4 4 0 014-4z"/><path d="M8 10v3M6.5 11.5h3"/><circle cx="16" cy="11" r=".6"/></svg></button><span>Game</span></div><button class="nv" id="npr"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Profil</button></nav>
+</div>
+<div class="app" id="bb" hidden>
+  <div class="xtop"><button class="tb" id="bbbk">←</button><b>🧱 Neon bloklar</b><div class="bbt"><button class="tb" id="bbff">⏩</button><button class="tb" id="bbrs">🔄</button></div></div>
+  <div class="bbh glass"><span>Bosqich <b id="bbr">1</b></span><span>Ball <b id="bbs">0</b></span><span>🎱 ×<b id="bbn">5</b></span><span>🏆 <b id="bbb">0</b></span></div>
+  <div class="xwrap glass"><canvas id="bbc" width="360" height="520"></canvas>
+    <div id="bbover"><div id="bbot"></div><button class="btn" id="bbst">▶ O‘ynash</button><button class="btn" id="bbmn">🏠 Menyu</button></div></div>
 </div>
 <div class="app" id="xo" hidden>
   <div class="xtop"><button class="tb" id="xbk">←</button><b>❌ X-O ⭕</b><button class="tb" id="xrs">🔄</button></div>
@@ -334,7 +346,7 @@ function start(){
 }
 function showOver(w){$("over").classList.remove("off");$("ow").hidden=w!=="w";$("om").hidden=w==="w"}
 function openMode(){gen++;over=true;resume=null;paused=false;$("tPa").textContent="⏸";setBtns(false);cam(0);showOver("m")}
-function show(id){$("menu").hidden=id!=="menu";$("game").hidden=id!=="game";$("xo").hidden=id!=="xo"}
+function show(id){$("menu").hidden=id!=="menu";$("game").hidden=id!=="game";$("xo").hidden=id!=="xo";$("bb").hidden=id!=="bb"}
 document.querySelectorAll(".seg .tb").forEach(function(b){b.onclick=function(){mode=b.dataset.m;document.querySelectorAll(".seg .tb").forEach(function(x){x.classList.toggle("on",x===b)});var n=$("n2");n.disabled=mode==="bot";n.value=mode==="bot"?"Bot":"Player 2"}});
 $("g1").onclick=$("np").onclick=function(){show("game");openMode()};
 $("cubeBox").onclick=function(){if(resume)go.onclick()};
@@ -377,6 +389,82 @@ $("g2").onclick=function(){$("xn1").value=$("n1").value||"Player";show("xo");xop
 $("xbk").onclick=$("xmn").onclick=function(){xgen++;xdone=true;show("menu")};
 $("xrs").onclick=$("xag").onclick=xopen;
 $("xst").onclick=xstart;
+(function(){
+var cv=$("bbc"),cx=cv.getContext("2d"),W=360,H=520,CS=40,COLS=9,ROWS=12,R=5,SP=8,FL=500;
+var blocks=[],picks=[],balls=[],round=1,score=0,best=0,nb=5,got=0,lx=W/2,fire=0,tick=0,state="over",fast=false,aim=null,aiming=false,first=null,gen=0,last=0,acc=0;
+try{best=+localStorage.getItem("np_bb")||0}catch(e){}
+function hud(){$("bbr").textContent=round;$("bbs").textContent=score;$("bbn").textContent=nb;$("bbb").textContent=best}
+function addRow(){
+  blocks.forEach(function(b){b.r++});picks.forEach(function(p){p.r++});
+  var cols=[0,1,2,3,4,5,6,7,8].sort(function(){return Math.random()-.5}),n=rnd(3,6);
+  for(var i=0;i<n;i++)blocks.push({c:cols[i],r:0,h:rnd(0,4)?round:round*2});
+  if(Math.random()<.9)picks.push({c:cols[n],r:0});
+  picks=picks.filter(function(p){return p.r<ROWS});
+}
+function col(h){var f=h/round;return f<=.8?"#3b82f6":f<=1.1?"#ff9f1c":f<=1.6?"#ff4d4d":"#ff6bd6"}
+function rr(x,y,w,h){var r=7;cx.beginPath();cx.moveTo(x+r,y);cx.arcTo(x+w,y,x+w,y+h,r);cx.arcTo(x+w,y+h,x,y+h,r);cx.arcTo(x,y+h,x,y,r);cx.arcTo(x,y,x+w,y,r);cx.closePath()}
+function draw(){
+  cx.clearRect(0,0,W,H);cx.lineWidth=1;cx.strokeStyle="rgba(255,255,255,.15)";cx.beginPath();cx.moveTo(0,FL);cx.lineTo(W,FL);cx.stroke();
+  cx.textAlign="center";cx.textBaseline="middle";cx.font="bold 15px sans-serif";
+  blocks.forEach(function(q){var x=q.c*CS+2,y=q.r*CS+2,c=col(q.h);cx.shadowColor=c;cx.shadowBlur=10;cx.strokeStyle=c;cx.fillStyle=c+"33";cx.lineWidth=2;rr(x,y,36,36);cx.fill();cx.stroke();cx.shadowBlur=0;cx.fillStyle="#fff";cx.fillText(q.h,x+18,y+19)});
+  picks.forEach(function(p){var x=p.c*CS+20,y=p.r*CS+20;cx.strokeStyle="#c66bff";cx.lineWidth=2;cx.setLineDash([4,3]);cx.beginPath();cx.arc(x,y,12,0,6.3);cx.stroke();cx.setLineDash([]);cx.fillStyle="#fff";cx.font="bold 11px sans-serif";cx.fillText("+1",x,y+1);cx.font="bold 15px sans-serif"});
+  if(aiming&&aim&&state==="aim"){cx.strokeStyle="rgba(255,255,255,.5)";cx.lineWidth=2;cx.setLineDash([3,6]);cx.beginPath();cx.moveTo(lx,FL-R);cx.lineTo(lx+aim.x*260,FL-R+aim.y*260);cx.stroke();cx.setLineDash([])}
+  cx.fillStyle="#fff";balls.forEach(function(b){cx.beginPath();cx.arc(b.x,b.y,R,0,6.3);cx.fill()});
+  if(state==="aim"){cx.beginPath();cx.arc(lx,FL-R,R,0,6.3);cx.fill();cx.font="12px sans-serif";cx.fillStyle="#cfe";cx.fillText("×"+nb,lx,FL-R-14)}
+}
+function step(){
+  if(fire>0&&tick%4===0){balls.push({x:lx,y:FL-R,vx:aim.x*SP,vy:aim.y*SP});fire--}
+  tick++;
+  for(var i=balls.length-1;i>=0;i--){var b=balls[i];
+    for(var s=0;s<2;s++){
+      b.x+=b.vx/2;b.y+=b.vy/2;
+      if(b.x<R){b.x=R;b.vx=Math.abs(b.vx)}else if(b.x>W-R){b.x=W-R;b.vx=-Math.abs(b.vx)}
+      if(b.y<R){b.y=R;b.vy=Math.abs(b.vy)}
+      for(var k=0;k<blocks.length;k++){var q=blocks[k],bx=q.c*CS+2,by=q.r*CS+2,nx=Math.max(bx,Math.min(b.x,bx+36)),ny=Math.max(by,Math.min(b.y,by+36)),dx=b.x-nx,dy=b.y-ny;
+        if(dx*dx+dy*dy<R*R){
+          if(Math.abs(dx)>Math.abs(dy)){b.vx=dx>0?Math.abs(b.vx):-Math.abs(b.vx);b.x=nx+(dx>0?R:-R)}else{b.vy=dy>0?Math.abs(b.vy):-Math.abs(b.vy);b.y=ny+(dy>0?R:-R)}
+          q.h--;score++;if(q.h<=0)blocks.splice(k,1);break}}
+      for(var m=picks.length-1;m>=0;m--){var p=picks[m],ex=b.x-(p.c*CS+20),ey=b.y-(p.r*CS+20);if(ex*ex+ey*ey<196){picks.splice(m,1);got++;beep(700,.05)}}
+    }
+    if(b.y>=FL){if(first===null)first=Math.max(R,Math.min(W-R,b.x));balls.splice(i,1)}
+  }
+  if(!balls.length&&fire===0&&state==="fly")endRound();
+}
+function endRound(){
+  if(first!==null)lx=first;first=null;nb+=got;got=0;round++;addRow();
+  if(blocks.some(function(b){return b.r>=ROWS})){over();return}
+  state="aim";hud();
+}
+function over(){
+  state="over";if(score>best){best=score;try{localStorage.setItem("np_bb",best)}catch(e){}}
+  hud();beep(200,.3);vib();
+  $("bbot").textContent="💥 O‘yin tugadi!\nBall: "+score+" · Bosqich: "+round+"\nRekord: "+best;
+  $("bbst").textContent="🔄 Qayta o‘ynash";$("bbover").classList.remove("off");
+}
+function start(){
+  gen++;var g=gen;
+  blocks=[];picks=[];balls=[];round=1;score=0;nb=5;got=0;lx=W/2;fire=0;fast=false;aiming=false;first=null;
+  for(var i=0;i<3;i++)addRow();
+  state="aim";$("bbover").classList.add("off");hud();last=performance.now();acc=0;
+  function lp(t){
+    if(g!==gen)return;
+    acc+=Math.min(t-last,50);last=t;
+    while(acc>=16.7){if(state==="fly"){step();if(fast&&state==="fly")step()}acc-=16.7}
+    draw();if(state==="over")return;requestAnimationFrame(lp);
+  }
+  requestAnimationFrame(lp);
+}
+function pt(e){var r=cv.getBoundingClientRect();return[(e.clientX-r.left)*W/r.width,(e.clientY-r.top)*H/r.height]}
+function setAim(e){var p=pt(e),dx=p[0]-lx,dy=Math.min(p[1]-FL,-20),L=Math.hypot(dx,dy);aim={x:dx/L,y:dy/L};if(aim.y>-.12){aim.y=-.12;aim.x=(aim.x<0?-1:1)*Math.sqrt(1-.0144)}}
+cv.addEventListener("pointerdown",function(e){if(state!=="aim")return;aiming=true;try{cv.setPointerCapture(e.pointerId)}catch(x){}setAim(e);draw()});
+cv.addEventListener("pointermove",function(e){if(aiming){setAim(e);draw()}});
+cv.addEventListener("pointerup",function(){if(!aiming)return;aiming=false;if(state==="aim"&&aim){fire=nb;tick=0;first=null;got=0;state="fly"}});
+$("g3").onclick=function(){show("bb");gen++;state="over";blocks=[];picks=[];balls=[];hud();draw();$("bbot").textContent="🧱 Neon bloklar\nBloklarni sindiring, ular pastga tushmasin!\nEkranni bosib turing, yo‘nalishni tanlang va qo‘yib yuboring.";$("bbst").textContent="▶ O‘ynash";$("bbover").classList.remove("off")};
+$("bbst").onclick=start;
+$("bbbk").onclick=$("bbmn").onclick=function(){gen++;state="over";show("menu")};
+$("bbrs").onclick=function(){gen++;state="over";draw();$("bbot").textContent="Qayta boshlaysizmi?";$("bbst").textContent="▶ O‘ynash";$("bbover").classList.remove("off")};
+$("bbff").onclick=function(){fast=!fast;this.classList.toggle("on",fast)};
+})();
 $("bk").onclick=$("mn").onclick=function(){gen++;over=true;resume=null;show("menu")};
 $("rs").onclick=$("ag").onclick=openMode;
 function who(n){$("hn").textContent=n;$("pn").textContent=n}
