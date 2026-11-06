@@ -168,6 +168,7 @@ h1{text-align:center;font-size:3rem;line-height:.6;font-weight:900;background:li
 #bbc{width:100%;display:block;touch-action:none;border-radius:14px;background:#0b0a22}
 #bbover{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;font-size:1.2rem;font-weight:800;color:#fff;background:rgba(10,8,35,.84);padding:20px;white-space:pre-line}#bbover.off{display:none}#bbover .btn{flex:none;width:80%}
 .bbt{display:flex;gap:6px}.bbt .tb{width:46px}
+.cseg{display:flex;gap:8px;width:80%}.cseg .tb{flex:1}.ngrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:84%}.ngrid .in{width:100%;padding:10px}
 @media(prefers-reduced-motion:reduce){#w,.tok{transition:none}}
 </style>
 </head>
@@ -207,13 +208,13 @@ h1{text-align:center;font-size:3rem;line-height:.6;font-weight:900;background:li
 <div class="app" id="game" hidden>
   
   <div class="players" id="pls"></div>
-  <div class="mm"><i id="m0"></i><i id="m1"></i></div>
+  <div class="mm"><i id="m0"></i><i id="m1"></i><i id="m2"></i><i id="m3"></i></div>
   <button class="btn" id="go" disabled hidden>🎲</button>
   <div class="tools"><button class="tb" id="tT" disabled>⚡ Turbo</button><button class="tb" id="tP" disabled>🎯 +2</button><button class="tb" id="tPa">⏸</button><button class="tb" id="tS">🔊</button></div>
   <div class="emos" id="emos"><button data-e="dance">😂</button><button data-e="mad">😡</button><button data-e="joy">👍</button><button data-e="dizzy">😱</button></div>
   <div class="log" id="log">Rejimni tanlang</div>
   <div id="scene"><div class="fade"></div><div id="w"></div><button class="tb sb l" id="bk">←</button><button class="tb sb r" id="rs">🔄</button><div id="cubeBox"><div id="cube"><div class="f f0" id="dice">?</div><div class="f f1">?</div><div class="f f2">?</div><div class="f f3">?</div><div class="f f4">?</div><div class="f f5">?</div></div></div>
-    <div id="over"><div id="ow" hidden><div id="ot"></div><button class="btn" id="ag">🔄 Qayta o‘ynash</button><button class="btn" id="mn">🏠 Menyu</button></div><div id="om"><div>Rejimni tanlang</div><div class="seg"><button class="tb on" data-m="bot">🤖 Bot bilan</button><button class="tb" data-m="duo">👥 2 kishilik</button></div><input class="in" id="n1" maxlength="14" value="Player" aria-label="1-o‘yinchi ismi"><input class="in" id="n2" maxlength="14" value="Bot" disabled aria-label="2-o‘yinchi ismi"><button class="btn" id="st">▶ Boshlash</button></div></div></div>
+    <div id="over"><div id="ow" hidden><div id="ot"></div><button class="btn" id="ag">🔄 Qayta o‘ynash</button><button class="btn" id="mn">🏠 Menyu</button></div><div id="om"><div>Rejimni tanlang</div><div class="seg"><button class="tb on" data-m="bot">🤖 Bot bilan</button><button class="tb" data-m="duo">👥 Do‘stlar bilan</button></div><div class="cseg"><button class="tb on" data-n="2">2 kishi</button><button class="tb" data-n="3">3 kishi</button><button class="tb" data-n="4">4 kishi</button></div><div class="ngrid"><input class="in" id="n1" maxlength="14" value="Player" aria-label="1-o‘yinchi ismi"><input class="in" id="n2" maxlength="14" value="Bot 1" disabled aria-label="2-o‘yinchi ismi"><input class="in" id="n3" maxlength="14" value="Bot 2" disabled hidden aria-label="3-o‘yinchi ismi"><input class="in" id="n4" maxlength="14" value="Bot 3" disabled hidden aria-label="4-o‘yinchi ismi"></div><button class="btn" id="st">▶ Boshlash</button></div></div></div>
   
 </div>
 <script>
@@ -223,7 +224,7 @@ for(var i=0;i<=LAST;i++){var t="n";if(i===0)t="S";else if(i===LAST)t="F";else if
 
 var ICON={S:"▶",F:"🏆",W:"🌀",s:"🔄",x:"🎁",i:"🧊",k:"🕳️",u:"⚡",q:"🛡️",n:""};
 var ZC=["#7a2a1a","#1a5a7a","#5a2a8a","#7a6a1a"],ZB=["#ff7a5a","#7fdcff","#d08bff","#ffd54a"],ZN=["🔴 Mars","🧊 Muz sayyorasi","🌫️ Tumanlik","☄️ Asteroidlar kamari"];
-var COL=["#22d3ee","#ff6bd6"],OFF=[-13,13];
+var COL=["#22d3ee","#ff6bd6","#ffd54a","#6ee77f"],OFF=[-13,13],OFF4=[-21,-7,7,21],OFY=[0,0,7,7];
 var ST={g:0,w:0};try{ST=JSON.parse(localStorage.getItem("np_st"))||ST}catch(e){}
 function saveST(){try{localStorage.setItem("np_st",JSON.stringify(ST))}catch(e){}}
 function stats(){var pc=ST.g?Math.round(ST.w/ST.g*100):0;$("rp").textContent=pc+"%";$("ring").style.setProperty("--p",pc+"%");$("c1").textContent="🎮 "+ST.g;$("c2").textContent="🏆 "+ST.w;$("gs").textContent=ST.g?"G‘alaba foizi":"Hali o‘ynalmagan";$("p1").textContent=ST.g;$("p2").textContent=ST.w;$("p3").textContent=pc+"%"}
@@ -256,7 +257,7 @@ function cam(i){
   sc.style.setProperty("--py",(-p[1]*.12)+"px");sc.style.setProperty("--px",(-p[0]*.12)+"px");
   sc.style.setProperty("--zc",ZC[z]);
 }
-function place(k){var p=P(S[k].pos);toks[k].style.left=(p[0]+OFF[k])+"px";toks[k].style.top=p[1]+"px";if(k===cur)cam(S[k].pos)}
+function place(k){var p=P(S[k].pos);toks[k].style.left=(p[0]+(NP===2?OFF[k]:OFF4[k]))+"px";toks[k].style.top=(p[1]+(NP===2?0:OFY[k]))+"px";if(k===cur)cam(S[k].pos)}
 function hud(){
   var box=$("pls");box.innerHTML="";
   PL.forEach(function(p,k){
@@ -281,7 +282,7 @@ async function bad(k,msg,fn,e){
   if(s.sh){s.sh=false;say("🛡️ "+PL[k].n+"ning qalqoni himoya qildi!");await sleep(900)}
   else{emo(k,e||"dizzy",e==="cold"?"🥶":"😵",2200);say(PL[k].n+": "+msg);await sleep(700);await fn()}
 }
-async function swap(k){var a=S[k].pos,b=S[1-k].pos;say("🔄 "+PL[k].n+" raqib bilan joy almashdi!");emo(k,"spin","🔄",1300);emo(1-k,"spin","🔄",1300);await sleep(500);await Promise.all([jump(k,b),jump(1-k,a)])}
+async function swap(k){var o=(k+1+rnd(0,PL.length-2))%PL.length,a=S[k].pos,b=S[o].pos;say("🔄 "+PL[k].n+" ↔ "+PL[o].n+" joy almashdi!");emo(k,"spin","🔄",1300);emo(o,"spin","🔄",1300);await sleep(500);await Promise.all([jump(k,b),jump(o,a)])}
 async function land(k){
   var p=S[k],t=MAP[p.pos],n=PL[k].n;
   if(t==="s")await swap(k);
@@ -318,14 +319,14 @@ $("tPa").onclick=function(){paused=!paused;this.textContent=paused?"▶":"⏸"};
 $("tS").onclick=function(){snd=!snd;this.textContent=snd?"🔊":"🔇"};
 function confetti(){for(var i=0;i<50;i++){var c=document.createElement("b");c.className="cf";c.style.cssText="left:"+rnd(5,95)+"%;background:hsl("+rnd(0,360)+",90%,60%);--dx:"+rnd(-60,60)+"px;animation-delay:"+(Math.random()*.5)+"s";sc.appendChild(c);setTimeout(c.remove.bind(c),2800)}}
 function win(k){
-  over=true;hud();confetti();emo(k,"dance","🏆",0);emo(1-k,"cry","😭",0);[600,760,920,1200].forEach(function(f,i){setTimeout(function(){beep(f,.2)},i*160)});
+  over=true;hud();confetti();emo(k,"dance","🏆",0);PL.forEach(function(p,j){if(j!==k)emo(j,"cry","😭",0)});[600,760,920,1200].forEach(function(f,i){setTimeout(function(){beep(f,.2)},i*160)});
   $("ot").textContent="🏆 "+PL[k].n+(PL[k].bot?" yutdi!":" yutdi! 🎉");
   showOver("w");ST.g++;if(k===0)ST.w++;saveST();stats();
 }
 async function play(){
   while(!over){
     var p=S[cur];hud();cam(p.pos);
-    if(p.sk){p.sk=false;say("🧊 "+PL[cur].n+" muzlab qoldi, navbati o‘tdi");await sleep(1300);cur=1-cur;continue}
+    if(p.sk){p.sk=false;say("🧊 "+PL[cur].n+" muzlab qoldi, navbati o‘tdi");await sleep(1300);cur=(cur+1)%PL.length;continue}
     if(PL[cur].bot){say(PL[cur].n+" kubik tashlayapti…");await sleep(1000);arm.t=p.tu>0&&Math.random()<.3;arm.p=p.bo>0&&Math.random()<.25}
     else{say(PL[cur].n+", kubikni bosing! 🎲");setBtns(true);await new Promise(function(r){resume=r})}
     var x=await roll(p);say(PL[cur].n+": "+x[0]+" tushdi"+x[1]);if(x[0]>=8)emo(cur,"joy","🥳",2000);else if(x[0]<=2)emo(cur,"sad","😢",2000);await sleep(450);
@@ -333,23 +334,27 @@ async function play(){
     if(p.pos>=LAST){win(cur);return}
     await land(cur);
     if(S[cur].pos>=LAST){win(cur);return}
-    cur=1-cur;
+    cur=(cur+1)%PL.length;
   }
 }
 function start(){
   gen++;var b=mode==="bot";
-  PL=[{n:$("n1").value.trim()||"Player"},{n:b?"Bot":($("n2").value.trim()||"Player 2"),bot:b}];
-  S=[0,1].map(function(){return{pos:0,sh:false,sk:false,tu:1,bo:2}});
+  PL=[];for(var k=0;k<NP;k++){var v=$("n"+(k+1)).value.trim();PL.push(k===0?{n:v||"Player"}:b?{n:v||"Bot "+k,bot:true}:{n:v||"Player "+(k+1)})}
+  S=PL.map(function(){return{pos:0,sh:false,sk:false,tu:1,bo:2}});
   cur=0;over=false;resume=null;arm.t=arm.p=false;setBtns(false);dice.textContent="?";
   $("over").classList.add("off");
-  toks.forEach(function(t,k){emo(k,"")});[0,1].forEach(place);hud();play().catch(function(){});
+  toks.forEach(function(t,k){t.hidden=k>=NP;emo(k,"")});[0,1,2,3].forEach(function(k){$("m"+k).hidden=k>=NP});PL.forEach(function(p,k){place(k)});hud();play().catch(function(){});
 }
 function showOver(w){$("over").classList.remove("off");$("ow").hidden=w!=="w";$("om").hidden=w==="w"}
 function openMode(){gen++;over=true;resume=null;paused=false;$("tPa").textContent="⏸";setBtns(false);cam(0);showOver("m")}
 function show(id){$("menu").hidden=id!=="menu";$("game").hidden=id!=="game";$("xo").hidden=id!=="xo";$("bb").hidden=id!=="bb"}
-document.querySelectorAll(".seg .tb").forEach(function(b){b.onclick=function(){mode=b.dataset.m;document.querySelectorAll(".seg .tb").forEach(function(x){x.classList.toggle("on",x===b)});var n=$("n2");n.disabled=mode==="bot";n.value=mode==="bot"?"Bot":"Player 2"}});
+document.querySelectorAll(".seg .tb").forEach(function(b){b.onclick=function(){mode=b.dataset.m;document.querySelectorAll(".seg .tb").forEach(function(x){x.classList.toggle("on",x===b)});nref()}});
 $("g1").onclick=$("np").onclick=function(){show("game");openMode()};
 $("cubeBox").onclick=function(){if(resume)go.onclick()};
+var NP=2;
+function nref(){for(var k=2;k<=4;k++){var e=$("n"+k);e.hidden=k>NP;e.disabled=mode==="bot";if(!e.dataset.t||e.value===e.dataset.t){var d=mode==="bot"?"Bot "+(k-1):"Player "+k;e.value=d;e.dataset.t=d}}}
+document.querySelectorAll(".cseg .tb").forEach(function(b){b.onclick=function(){NP=+b.dataset.n;document.querySelectorAll(".cseg .tb").forEach(function(x){x.classList.toggle("on",x===b)});nref()}});
+nref();
 var XM="bot",XB=[],XT=0,XP=[],xdone=true,xgen=0,XW=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 function xsay(t){$("xlog").textContent=t}
 function xhud(){var b=$("xpl");b.innerHTML="";XP.forEach(function(p,k){var c=document.createElement("div");c.className="pl glass"+(k===XT&&!xdone?" act":"");c.style.setProperty("--c",p.c);c.innerHTML='<b><span class="dot" style="background:'+p.c+'"></span>'+p.n+(p.bot?" 🤖":"")+'</b><span>'+p.m+'</span>';b.appendChild(c)})}
@@ -390,32 +395,33 @@ $("xbk").onclick=$("xmn").onclick=function(){xgen++;xdone=true;show("menu")};
 $("xrs").onclick=$("xag").onclick=xopen;
 $("xst").onclick=xstart;
 (function(){
-var cv=$("bbc"),cx=cv.getContext("2d"),W=360,H=520,CS=40,COLS=9,ROWS=12,R=5,SP=8,FL=500;
-var blocks=[],picks=[],balls=[],round=1,score=0,best=0,nb=5,got=0,lx=W/2,fire=0,tick=0,state="over",fast=false,aim=null,aiming=false,first=null,gen=0,last=0,acc=0;
+var cv=$("bbc"),cx=cv.getContext("2d"),W=360,H=520,CS=40,COLS=9,ROWS=11,R=5,SP=8,FL=500;
+var blocks=[],picks=[],balls=[],level=1,MAXL=10,wave=0,waves=4,ref=1,cnx=W/2,BC=["#ffffff","#7fdcff","#ffd54a","#ff6bd6","#7cff8a"],score=0,best=0,nb=5,got=0,lx=W/2,fire=0,tick=0,state="over",fast=false,aim={x:0,y:-1},aiming=false,first=null,gen=0,last=0,acc=0;
 try{best=+localStorage.getItem("np_bb")||0}catch(e){}
-function hud(){$("bbr").textContent=round;$("bbs").textContent=score;$("bbn").textContent=nb;$("bbb").textContent=best}
+function hud(){$("bbr").textContent=level+"/"+MAXL;$("bbs").textContent=score;$("bbn").textContent=nb;$("bbb").textContent=best}
 function addRow(){
   blocks.forEach(function(b){b.r++});picks.forEach(function(p){p.r++});
-  var cols=[0,1,2,3,4,5,6,7,8].sort(function(){return Math.random()-.5}),n=rnd(3,6);
-  for(var i=0;i<n;i++)blocks.push({c:cols[i],r:0,h:rnd(0,4)?round:round*2});
+  if(wave>=waves){picks=picks.filter(function(p){return p.r<ROWS});return}
+  wave++;ref=wave+level-1;var cols=[0,1,2,3,4,5,6,7,8].sort(function(){return Math.random()-.5}),n=Math.min(8,rnd(2+Math.ceil(level/2),4+Math.ceil(level/2)));
+  for(var i=0;i<n;i++)blocks.push({c:cols[i],r:0,h:rnd(0,4)?ref:ref*2});
   if(Math.random()<.9)picks.push({c:cols[n],r:0});
   picks=picks.filter(function(p){return p.r<ROWS});
 }
-function col(h){var f=h/round;return f<=.8?"#3b82f6":f<=1.1?"#ff9f1c":f<=1.6?"#ff4d4d":"#ff6bd6"}
+function col(h){var f=h/ref;return f<=.8?"#3b82f6":f<=1.1?"#ff9f1c":f<=1.6?"#ff4d4d":"#ff6bd6"}
 function rr(x,y,w,h){var r=7;cx.beginPath();cx.moveTo(x+r,y);cx.arcTo(x+w,y,x+w,y+h,r);cx.arcTo(x+w,y+h,x,y+h,r);cx.arcTo(x,y+h,x,y,r);cx.arcTo(x,y,x+w,y,r);cx.closePath()}
 function draw(){
   cx.clearRect(0,0,W,H);cx.lineWidth=1;cx.strokeStyle="rgba(255,255,255,.15)";cx.beginPath();cx.moveTo(0,FL);cx.lineTo(W,FL);cx.stroke();
   cx.textAlign="center";cx.textBaseline="middle";cx.font="bold 15px sans-serif";
   blocks.forEach(function(q){var x=q.c*CS+2,y=q.r*CS+2,c=col(q.h);cx.shadowColor=c;cx.shadowBlur=10;cx.strokeStyle=c;cx.fillStyle=c+"33";cx.lineWidth=2;rr(x,y,36,36);cx.fill();cx.stroke();cx.shadowBlur=0;cx.fillStyle="#fff";cx.fillText(q.h,x+18,y+19)});
   picks.forEach(function(p){var x=p.c*CS+20,y=p.r*CS+20;cx.strokeStyle="#c66bff";cx.lineWidth=2;cx.setLineDash([4,3]);cx.beginPath();cx.arc(x,y,12,0,6.3);cx.stroke();cx.setLineDash([]);cx.fillStyle="#fff";cx.font="bold 11px sans-serif";cx.fillText("+1",x,y+1);cx.font="bold 15px sans-serif"});
-  if(aiming&&aim&&state==="aim"){cx.strokeStyle="rgba(255,255,255,.5)";cx.lineWidth=2;cx.setLineDash([3,6]);cx.beginPath();cx.moveTo(lx,FL-R);cx.lineTo(lx+aim.x*260,FL-R+aim.y*260);cx.stroke();cx.setLineDash([])}
-  cx.fillStyle="#fff";balls.forEach(function(b){cx.beginPath();cx.arc(b.x,b.y,R,0,6.3);cx.fill()});
-  if(state==="aim"){cx.beginPath();cx.arc(lx,FL-R,R,0,6.3);cx.fill();cx.font="12px sans-serif";cx.fillStyle="#cfe";cx.fillText("×"+nb,lx,FL-R-14)}
+  if(aiming&&aim&&state==="aim"){cx.strokeStyle="rgba(255,255,255,.5)";cx.lineWidth=2;cx.setLineDash([3,6]);cx.beginPath();cx.moveTo(cnx+aim.x*26,FL-4+aim.y*26);cx.lineTo(cnx+aim.x*286,FL-4+aim.y*286);cx.stroke();cx.setLineDash([])}
+  var bc=BC[Math.min(Math.floor((level-1)/2),4)];cx.fillStyle=bc;cx.shadowColor=bc;cx.shadowBlur=8;balls.forEach(function(b){cx.beginPath();cx.arc(b.x,b.y,R,0,6.3);cx.fill()});cx.shadowBlur=0;drawCannon(bc);
+  
 }
 function step(){
-  if(fire>0&&tick%4===0){balls.push({x:lx,y:FL-R,vx:aim.x*SP,vy:aim.y*SP});fire--}
+  if(fire>0&&tick%4===0){balls.push({x:cnx+aim.x*26,y:FL-4+aim.y*26,vx:aim.x*SP,vy:aim.y*SP});fire--}
   tick++;
-  for(var i=balls.length-1;i>=0;i--){var b=balls[i];
+  for(var i=balls.length-1;i>=0;i--){var b=balls[i];if(b.home){var tx=first;b.x+=Math.sign(tx-b.x)*Math.min(10,Math.abs(tx-b.x));if(Math.abs(tx-b.x)<1)balls.splice(i,1);continue}
     for(var s=0;s<2;s++){
       b.x+=b.vx/2;b.y+=b.vy/2;
       if(b.x<R){b.x=R;b.vx=Math.abs(b.vx)}else if(b.x>W-R){b.x=W-R;b.vx=-Math.abs(b.vx)}
@@ -426,31 +432,49 @@ function step(){
           q.h--;score++;if(q.h<=0)blocks.splice(k,1);break}}
       for(var m=picks.length-1;m>=0;m--){var p=picks[m],ex=b.x-(p.c*CS+20),ey=b.y-(p.r*CS+20);if(ex*ex+ey*ey<196){picks.splice(m,1);got++;beep(700,.05)}}
     }
-    if(b.y>=FL){if(first===null)first=Math.max(R,Math.min(W-R,b.x));balls.splice(i,1)}
+    if(b.y>=FL){if(first===null)first=Math.max(R,Math.min(W-R,b.x));b.home=true;b.y=FL-R;b.vx=0;b.vy=0}
   }
   if(!balls.length&&fire===0&&state==="fly")endRound();
 }
 function endRound(){
-  if(first!==null)lx=first;first=null;nb+=got;got=0;round++;addRow();
+  if(first!==null)lx=first;first=null;nb+=got;got=0;if(!blocks.length&&wave>=waves){levelDone();return}addRow();
   if(blocks.some(function(b){return b.r>=ROWS})){over();return}
   state="aim";hud();
 }
 function over(){
   state="over";if(score>best){best=score;try{localStorage.setItem("np_bb",best)}catch(e){}}
   hud();beep(200,.3);vib();
-  $("bbot").textContent="💥 O‘yin tugadi!\nBall: "+score+" · Bosqich: "+round+"\nRekord: "+best;
+  $("bbot").textContent="💥 O‘yin tugadi!\nBall: "+score+" · Bosqich: "+level+"\nRekord: "+best;
   $("bbst").textContent="🔄 Qayta o‘ynash";$("bbover").classList.remove("off");
+}
+function drawCannon(c){
+  var a=aim||{x:0,y:-1},n=state==="fly"?fire:nb;
+  cx.save();cx.shadowColor=c;cx.shadowBlur=10;cx.fillStyle="#1d2a55";cx.strokeStyle=c;cx.lineWidth=2;
+  cx.translate(cnx,FL-4);cx.rotate(Math.atan2(a.y,a.x));cx.beginPath();cx.rect(0,-6,24,12);cx.fill();cx.stroke();cx.restore();
+  cx.save();cx.shadowColor=c;cx.shadowBlur=10;cx.fillStyle="#1d2a55";cx.strokeStyle=c;cx.lineWidth=2;cx.beginPath();cx.arc(cnx,FL-4,14,Math.PI,0);cx.closePath();cx.fill();cx.stroke();cx.restore();
+  cx.fillStyle="#fff";cx.font="bold 11px sans-serif";cx.textAlign="center";cx.fillText("×"+n,cnx,FL+11);
+}
+function loadLevel(){blocks=[];picks=[];balls=[];wave=0;waves=3+level;ref=level;lx=W/2;cnx=W/2;fire=0;aiming=false;first=null;aim={x:0,y:-1};for(var i=0;i<3;i++)addRow();state="aim";hud()}
+function levelDone(){
+  beep(900,.2);vib();
+  if(level>=MAXL){
+    state="over";if(score>best){best=score;try{localStorage.setItem("np_bb",best)}catch(e){}}hud();
+    $("bbot").textContent="🏆 Tabriklaymiz!\nBarcha "+MAXL+" bosqich tugadi!\nBall: "+score+" · Rekord: "+best;$("bbst").textContent="🔄 Qayta o‘ynash";
+  }else{
+    state="done";var t=Math.floor(level/2)!==Math.floor((level-1)/2)?"\n🎨 To‘plar rangi o‘zgardi!":"";
+    $("bbot").textContent="✅ "+level+"-bosqich tugadi!\nKeyingi: "+(level+1)+"-bosqich"+t;$("bbst").textContent="▶ Keyingi bosqich";
+  }
+  $("bbover").classList.remove("off");
 }
 function start(){
   gen++;var g=gen;
-  blocks=[];picks=[];balls=[];round=1;score=0;nb=5;got=0;lx=W/2;fire=0;fast=false;aiming=false;first=null;
-  for(var i=0;i<3;i++)addRow();
-  state="aim";$("bbover").classList.add("off");hud();last=performance.now();acc=0;
+  level=1;score=0;nb=5;got=0;fast=false;loadLevel();$("bbover").classList.add("off");last=performance.now();acc=0;
+  
   function lp(t){
     if(g!==gen)return;
     acc+=Math.min(t-last,50);last=t;
     while(acc>=16.7){if(state==="fly"){step();if(fast&&state==="fly")step()}acc-=16.7}
-    draw();if(state==="over")return;requestAnimationFrame(lp);
+    cnx+=((state==="fly"&&fire===0&&first!==null?first:lx)-cnx)*.25;draw();if(state==="over")return;requestAnimationFrame(lp);
   }
   requestAnimationFrame(lp);
 }
@@ -460,7 +484,7 @@ cv.addEventListener("pointerdown",function(e){if(state!=="aim")return;aiming=tru
 cv.addEventListener("pointermove",function(e){if(aiming){setAim(e);draw()}});
 cv.addEventListener("pointerup",function(){if(!aiming)return;aiming=false;if(state==="aim"&&aim){fire=nb;tick=0;first=null;got=0;state="fly"}});
 $("g3").onclick=function(){show("bb");gen++;state="over";blocks=[];picks=[];balls=[];hud();draw();$("bbot").textContent="🧱 Neon bloklar\nBloklarni sindiring, ular pastga tushmasin!\nEkranni bosib turing, yo‘nalishni tanlang va qo‘yib yuboring.";$("bbst").textContent="▶ O‘ynash";$("bbover").classList.remove("off")};
-$("bbst").onclick=start;
+$("bbst").onclick=function(){if(state==="done"){level++;loadLevel();$("bbover").classList.add("off")}else start()};
 $("bbbk").onclick=$("bbmn").onclick=function(){gen++;state="over";show("menu")};
 $("bbrs").onclick=function(){gen++;state="over";draw();$("bbot").textContent="Qayta boshlaysizmi?";$("bbst").textContent="▶ O‘ynash";$("bbover").classList.remove("off")};
 $("bbff").onclick=function(){fast=!fast;this.classList.toggle("on",fast)};
